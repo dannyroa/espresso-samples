@@ -1,5 +1,5 @@
 # Android Espresso Samples
 
-## RecyclerView: 
+RecyclerView: 
 
 Performing actions and matches on items by position.
