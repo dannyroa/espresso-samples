@@ -4,13 +4,10 @@ import android.support.annotation.IdRes;
 import android.support.test.espresso.PerformException;
 import android.support.test.espresso.UiController;
 import android.support.test.espresso.ViewAction;
-import android.support.test.espresso.matcher.BoundedMatcher;
 import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.espresso.util.HumanReadables;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.TextView;
-import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
 
@@ -103,31 +100,10 @@ public class TestUtils {
         }
     }
 
-    public static Matcher<View> withTextAtRecycleViewPosition(final int position,
-                                                              @IdRes final int viewId,
-                                                              final Matcher<String> stringMatcher) {
 
-        return new BoundedMatcher<View, RecyclerView>(RecyclerView.class) {
-            public void describeTo(Description description) {
-                description.appendText("with text: ");
-                stringMatcher.describeTo(description);
-            }
+    public static RecyclerViewMatcher withRecyclerView(final int recyclerViewId) {
 
-            public boolean matchesSafely(RecyclerView recyclerView) {
-                TextView targetView =
-                    (TextView) recyclerView.getChildAt(position).findViewById(viewId);
-
-                if (targetView != null) {
-                    return stringMatcher.matches(targetView.getText().toString());
-                }
-                return false;
-            }
-        };
+        return new RecyclerViewMatcher(recyclerViewId);
     }
 
-    public static Matcher<View> withTextAtRecycleViewPosition(int position,
-                                                              @IdRes final int viewId,
-                                                              String text) {
-        return withTextAtRecycleViewPosition(position, viewId, Matchers.is(text));
-    }
 }
