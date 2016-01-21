@@ -81,6 +81,8 @@ public class PermissionsTest {
     @Test
     public void grantLocationPermission() {
 
+        App.setPermissionsModule(new DefaultPermissionsModule());
+
         device.findObject(By.res(APP_PACKAGE_NAME, "btnRequestLocationPermission")).click();
 
         UiObject2 btnAllow = device.wait(Until.findObject(By.res(INSTALLER_PACKAGE_NAME, "permission_allow_button")),
@@ -90,10 +92,10 @@ public class PermissionsTest {
 
         btnAllow.click();
 
-        UiObject2 llAnonWelcome = device.wait(Until.findObject(By.res(APP_PACKAGE_NAME,
+        UiObject2 tvLocationPermissionGranted = device.wait(Until.findObject(By.res(APP_PACKAGE_NAME,
                                                                       "tvLocationPermissionGranted")), 10000);
 
-        MatcherAssert.assertThat(llAnonWelcome, IsNull.notNullValue());
+        MatcherAssert.assertThat(tvLocationPermissionGranted, IsNull.notNullValue());
 
     }
 }

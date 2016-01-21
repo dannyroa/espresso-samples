@@ -1,6 +1,5 @@
 package com.dannyroa.espresso_samples.runtime_permissions;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.test.InstrumentationRegistry;
@@ -15,9 +14,9 @@ import org.junit.rules.TestName;
 import org.junit.runner.RunWith;
 
 import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.withEffectiveVisibility;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static android.support.test.espresso.assertion.ViewAssertions.matches;
 
 /**
  * Created by dannyroa on 11/28/15.
@@ -40,27 +39,6 @@ public class MainActivityTest {
 
     @Before public void setUp() {
         App.setPermissionsModule(permissionsModule);
-    }
-
-    class MockPermissionsModule implements PermissionsModule {
-
-        private boolean locationGranted = false;
-
-        @Override public boolean isLocationGranted(Context context) {
-            return locationGranted;
-        }
-
-        @Override public boolean shouldShowLocationPermissionRationale(Activity activity) {
-            return false;
-        }
-
-        @Override public void requestLocationPermission(Activity activity, int requestCode) {
-
-        }
-
-        public void setLocationGranted(boolean locationGranted) {
-            this.locationGranted = locationGranted;
-        }
     }
 
     @Test
