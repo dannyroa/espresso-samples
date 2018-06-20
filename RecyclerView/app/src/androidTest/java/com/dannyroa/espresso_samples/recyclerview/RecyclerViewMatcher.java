@@ -29,7 +29,8 @@ public class RecyclerViewMatcher {
 
             public void describeTo(Description description) {
                 String idDescription = Integer.toString(recyclerViewId);
-                if (this.resources != null) {
+				String targetIdDescription = Integer.toString(targetViewId);
+				if (this.resources != null) {
                     try {
                         idDescription = this.resources.getResourceName(recyclerViewId);
                     } catch (Resources.NotFoundException var4) {
@@ -37,9 +38,23 @@ public class RecyclerViewMatcher {
                                                       new Object[] { Integer.valueOf
                                                           (recyclerViewId) });
                     }
+
+					if (targetViewId != -1) {
+						try {
+							targetIdDescription = this.resources.getResourceName(targetViewId);
+						} catch (Resources.NotFoundException var4) {
+							idDescription = String.format("%s (resource name not found)",
+									new Object[]{Integer.valueOf
+											(targetViewId)});
+						}
+					} else {
+						targetIdDescription = "none";
+					}
                 }
 
-                description.appendText("with id: " + idDescription);
+				description.appendText(" with id: " + idDescription
+						+ " ,and target view Id: " + targetIdDescription
+						+ " at position: " + position);
             }
 
             public boolean matchesSafely(View view) {
