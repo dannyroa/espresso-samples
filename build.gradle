@@ -1,0 +1,51 @@
+buildscript {
+    repositories {
+        jcenter()
+        google()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:4.0.0'
+    }
+
+}
+
+plugins {
+    id "com.github.sherter.google-java-format" version "0.8"
+}
+
+allprojects {
+    repositories {
+        jcenter()
+        google()
+    }
+}
+
+subprojects { project ->
+    project.tasks.withType(JavaCompile) {
+        dependsOn(installGitHooks)
+    }
+
+    repositories {
+        jcenter()
+        google()
+    }
+
+}
+
+googleJavaFormat {
+    toolVersion = "1.7"
+}
+
+////////////////////////////////////////////////////////////////////////
+//
+//  Google Java Format pre-commit hook installation
+////////////////////////////////////////////////////////////////////////
+
+
+tasks.register('installGitHooks', Copy) {
+    from(file('config/hooks/pre-commit-stub')) {
+        rename 'pre-commit-stub', 'pre-commit'
+    }
+    into file('.git/hooks')
+    fileMode 0777
+}
