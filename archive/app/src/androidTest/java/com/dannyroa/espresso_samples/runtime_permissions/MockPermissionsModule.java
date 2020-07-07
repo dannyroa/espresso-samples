@@ -8,21 +8,23 @@ import android.content.Context;
  */
 public class MockPermissionsModule implements PermissionsModule {
 
-    private boolean locationGranted = false;
+  private boolean locationGranted = false;
 
-    @Override public boolean isLocationGranted(Context context) {
-        return locationGranted;
-    }
+  @Override
+  public boolean isLocationGranted(Context context) {
+    return locationGranted;
+  }
 
-    @Override public boolean shouldShowLocationPermissionRationale(Activity activity) {
-        return false;
-    }
+  @Override
+  public boolean shouldShowLocationPermissionRationale(Activity activity) {
+    return false;
+  }
 
-    @Override public void requestLocationPermission(Activity activity, int requestCode) {
+  @Override
+  public void requestLocationPermission(Activity activity, int requestCode) {
+  }
 
-    }
-
-    public void setLocationGranted(boolean locationGranted) {
-        this.locationGranted = locationGranted;
-    }
+  public void setLocationGranted(boolean locationGranted) {
+    this.locationGranted = locationGranted;
+  }
 }

@@ -16,14 +16,13 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-
 @RunWith(AndroidJUnit4.class)
 @LargeTest
 public class RecyclerViewTest {
 
   @Rule
-  public ActivityScenarioRule<MainActivity> activityScenarioRule
-      = new ActivityScenarioRule<>(MainActivity.class);
+  public ActivityScenarioRule<MainActivity> activityScenarioRule =
+      new ActivityScenarioRule<>(MainActivity.class);
 
   @Test
   public void itemClick() {
@@ -31,15 +30,16 @@ public class RecyclerViewTest {
     onView(withRecyclerView(R.id.recycler_view).atPosition(1)).perform(click());
 
     onView(withId(R.id.team_name)).check(matches(isDisplayed()));
-
   }
 
   @Test
   public void followButton_Click() {
-    onView(withId(R.id.recycler_view)).perform(TestUtils.actionOnItemViewAtPosition(1,
-        R.id.follow_button, click()));
-    String followingText = InstrumentationRegistry.getInstrumentation().getTargetContext()
-        .getString(R.string.following);
+    onView(withId(R.id.recycler_view))
+        .perform(TestUtils.actionOnItemViewAtPosition(1, R.id.follow_button, click()));
+    String followingText =
+        InstrumentationRegistry.getInstrumentation()
+            .getTargetContext()
+            .getString(R.string.following);
 
     onView(withRecyclerView(R.id.recycler_view).atPositionOnView(1, R.id.follow_button))
         .check(matches(withText(followingText)));

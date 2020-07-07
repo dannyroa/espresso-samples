@@ -10,53 +10,53 @@ import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final int LOCATION_REQUEST_CODE = 101;
+  private static final int LOCATION_REQUEST_CODE = 101;
 
-    TextView tvLocationPermissionGranted;
-    Button btnRequestLocationPermission;
+  TextView tvLocationPermissionGranted;
+  Button btnRequestLocationPermission;
 
-    @Override protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+  @Override
+  protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    setContentView(R.layout.activity_main);
 
-        tvLocationPermissionGranted = (TextView) findViewById(R.id.tvLocationPermissionGranted);
-        btnRequestLocationPermission = (Button) findViewById(R.id.btnRequestLocationPermission);
+    tvLocationPermissionGranted = (TextView) findViewById(R.id.tvLocationPermissionGranted);
+    btnRequestLocationPermission = (Button) findViewById(R.id.btnRequestLocationPermission);
 
-        updateUI();
+    updateUI();
+  }
+
+  void updateUI() {
+    if (!App.getPermissionsModule().isLocationGranted(this)) {
+      tvLocationPermissionGranted.setVisibility(View.GONE);
+      btnRequestLocationPermission.setVisibility(View.VISIBLE);
+      btnRequestLocationPermission.setOnClickListener(new RequestLocationButtonListener());
+    } else {
+      tvLocationPermissionGranted.setVisibility(View.VISIBLE);
+      btnRequestLocationPermission.setVisibility(View.GONE);
+      btnRequestLocationPermission.setOnClickListener(null);
     }
+  }
 
-    void updateUI() {
-        if (!App.getPermissionsModule().isLocationGranted(this)) {
-            tvLocationPermissionGranted.setVisibility(View.GONE);
-            btnRequestLocationPermission.setVisibility(View.VISIBLE);
-            btnRequestLocationPermission.setOnClickListener(new RequestLocationButtonListener());
+  @Override
+  public void onRequestPermissionsResult(
+      int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+
+    if (requestCode == LOCATION_REQUEST_CODE) {
+      if (grantResults.length == 1) {
+        if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+          updateUI();
         }
-        else {
-            tvLocationPermissionGranted.setVisibility(View.VISIBLE);
-            btnRequestLocationPermission.setVisibility(View.GONE);
-            btnRequestLocationPermission.setOnClickListener(null);
-        }
+      }
     }
+  }
 
-    class RequestLocationButtonListener implements View.OnClickListener {
-
-        @Override public void onClick(View v) {
-            App.getPermissionsModule().requestLocationPermission(MainActivity.this, LOCATION_REQUEST_CODE);
-        }
-    }
-
+  class RequestLocationButtonListener implements View.OnClickListener {
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[]
-        grantResults) {
-
-        if (requestCode == LOCATION_REQUEST_CODE) {
-            if (grantResults.length == 1) {
-                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    updateUI();
-                }
-            }
-        }
-
+    public void onClick(View v) {
+      App.getPermissionsModule()
+          .requestLocationPermission(MainActivity.this, LOCATION_REQUEST_CODE);
     }
+  }
 }

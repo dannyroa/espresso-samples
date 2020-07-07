@@ -50,8 +50,9 @@ public class RecyclerViewMatcher {
           RecyclerView recyclerView =
               (RecyclerView) view.getRootView().findViewById(recyclerViewId);
           if (recyclerView != null && recyclerView.getId() == recyclerViewId) {
-            childView = Objects
-                .requireNonNull(recyclerView.findViewHolderForLayoutPosition(position)).itemView;
+            childView =
+                Objects.requireNonNull(recyclerView.findViewHolderForLayoutPosition(position))
+                    .itemView;
           } else {
             return false;
           }
@@ -63,7 +64,6 @@ public class RecyclerViewMatcher {
           View targetView = childView.findViewById(targetViewId);
           return view == targetView;
         }
-
       }
     };
   }

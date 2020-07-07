@@ -1,5 +1,10 @@
 package com.dannyroa.espresso_samples.runtime_permissions;
 
+import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.matcher.ViewMatchers.withEffectiveVisibility;
+import static android.support.test.espresso.matcher.ViewMatchers.withId;
+
 import android.content.Context;
 import android.content.Intent;
 import android.support.test.InstrumentationRegistry;
@@ -13,63 +18,56 @@ import org.junit.Test;
 import org.junit.rules.TestName;
 import org.junit.runner.RunWith;
 
-import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.assertion.ViewAssertions.matches;
-import static android.support.test.espresso.matcher.ViewMatchers.withEffectiveVisibility;
-import static android.support.test.espresso.matcher.ViewMatchers.withId;
-
 /**
  * Created by dannyroa on 11/28/15.
  */
-
 @RunWith(AndroidJUnit4.class)
 @LargeTest
 public class MainActivityTest {
 
-    MockPermissionsModule permissionsModule = new MockPermissionsModule();
+  @Rule
+  public TestName name = new TestName();
+  @Rule
+  public ActivityTestRule<MainActivity> activityTestRule =
+      new ActivityTestRule<>(MainActivity.class, true, false);
+  MockPermissionsModule permissionsModule = new MockPermissionsModule();
 
-    @Rule public TestName name = new TestName();
+  Context getContext() {
+    return InstrumentationRegistry.getTargetContext();
+  }
 
-    Context getContext() {
-        return InstrumentationRegistry.getTargetContext();
-    }
+  @Before
+  public void setUp() {
+    App.setPermissionsModule(permissionsModule);
+  }
 
-    @Rule public ActivityTestRule<MainActivity> activityTestRule =
-        new ActivityTestRule<>(MainActivity.class, true, false);
+  @Test
+  public void shouldShowLocationGrantedText() {
 
-    @Before public void setUp() {
-        App.setPermissionsModule(permissionsModule);
-    }
+    permissionsModule.setLocationGranted(true);
 
-    @Test
-    public void shouldShowLocationGrantedText() {
+    Intent intent = new Intent(getContext(), MainActivity.class);
+    activityTestRule.launchActivity(intent);
 
-        permissionsModule.setLocationGranted(true);
+    onView(withId(R.id.tvLocationPermissionGranted))
+        .check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
 
-        Intent intent = new Intent(getContext(), MainActivity.class);
-        activityTestRule.launchActivity(intent);
+    onView(withId(R.id.btnRequestLocationPermission))
+        .check(matches(withEffectiveVisibility(ViewMatchers.Visibility.GONE)));
+  }
 
-        onView(withId(R.id.tvLocationPermissionGranted)).check(matches(withEffectiveVisibility(
-            ViewMatchers.Visibility.VISIBLE)));
+  @Test
+  public void shouldShowRequestLocationButton() {
 
-        onView(withId(R.id.btnRequestLocationPermission)).check(matches(withEffectiveVisibility(
-            ViewMatchers.Visibility.GONE)));
+    permissionsModule.setLocationGranted(false);
 
-    }
+    Intent intent = new Intent(getContext(), MainActivity.class);
+    activityTestRule.launchActivity(intent);
 
-    @Test
-    public void shouldShowRequestLocationButton() {
+    onView(withId(R.id.btnRequestLocationPermission))
+        .check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
 
-        permissionsModule.setLocationGranted(false);
-
-        Intent intent = new Intent(getContext(), MainActivity.class);
-        activityTestRule.launchActivity(intent);
-
-        onView(withId(R.id.btnRequestLocationPermission)).check(matches(
-            withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
-
-        onView(withId(R.id.tvLocationPermissionGranted)).check(matches(withEffectiveVisibility(
-            ViewMatchers.Visibility.GONE)));
-
-    }
+    onView(withId(R.id.tvLocationPermissionGranted))
+        .check(matches(withEffectiveVisibility(ViewMatchers.Visibility.GONE)));
+  }
 }

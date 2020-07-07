@@ -26,76 +26,74 @@ import org.junit.runner.RunWith;
 @SdkSuppress(minSdkVersion = 23)
 public class PermissionsTest {
 
-    private static final String APP_PACKAGE_NAME = "com.dannyroa.espresso_samples.runtime_permissions";
-    private static final String INSTALLER_PACKAGE_NAME = "com.android.packageinstaller";
+  private static final String APP_PACKAGE_NAME =
+      "com.dannyroa.espresso_samples.runtime_permissions";
+  private static final String INSTALLER_PACKAGE_NAME = "com.android.packageinstaller";
+  private static final int LAUNCH_TIMEOUT = 5000;
+  private UiDevice device;
 
-    private UiDevice device;
+  Context getContext() {
+    return InstrumentationRegistry.getTargetContext();
+  }
 
+  @Before
+  public void startMainActivityFromHomeScreen() {
+    // Initialize UiDevice instance
+    device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
 
-    private static final int LAUNCH_TIMEOUT = 5000;
+    // Start from the home screen
+    device.pressHome();
 
-    Context getContext() {
-        return InstrumentationRegistry.getTargetContext();
-    }
+    // Wait for launcher
+    final String launcherPackage = getLauncherPackageName();
+    MatcherAssert.assertThat(launcherPackage, IsNull.notNullValue());
+    device.wait(Until.hasObject(By.pkg(launcherPackage).depth(0)), LAUNCH_TIMEOUT);
 
-    @Before
-    public void startMainActivityFromHomeScreen() {
-        // Initialize UiDevice instance
-        device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
+    // Launch the app
+    Context context = InstrumentationRegistry.getContext();
+    final Intent intent = context.getPackageManager().getLaunchIntentForPackage(APP_PACKAGE_NAME);
+    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK); // Clear out any previous instances
+    context.startActivity(intent);
 
-        // Start from the home screen
-        device.pressHome();
+    // Wait for the app to appear
+    device.wait(Until.hasObject(By.pkg(APP_PACKAGE_NAME).depth(0)), LAUNCH_TIMEOUT);
+  }
 
-        // Wait for launcher
-        final String launcherPackage = getLauncherPackageName();
-        MatcherAssert.assertThat(launcherPackage, IsNull.notNullValue());
-        device.wait(Until.hasObject(By.pkg(launcherPackage).depth(0)), LAUNCH_TIMEOUT);
+  /**
+   * Uses package manager to find the package name of the device launcher. Usually this package is
+   * "com.android.launcher" but can be different at times. This is a generic solution which works on
+   * all platforms.`
+   */
+  private String getLauncherPackageName() {
+    // Create launcher Intent
+    final Intent intent = new Intent(Intent.ACTION_MAIN);
+    intent.addCategory(Intent.CATEGORY_HOME);
 
-        // Launch the app
-        Context context = InstrumentationRegistry.getContext();
-        final Intent intent = context.getPackageManager()
-                                     .getLaunchIntentForPackage(APP_PACKAGE_NAME);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);    // Clear out any previous instances
-        context.startActivity(intent);
+    // Use PackageManager to get the launcher package name
+    PackageManager pm = InstrumentationRegistry.getContext().getPackageManager();
+    ResolveInfo resolveInfo = pm.resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY);
+    return resolveInfo.activityInfo.packageName;
+  }
 
-        // Wait for the app to appear
-        device.wait(Until.hasObject(By.pkg(APP_PACKAGE_NAME).depth(0)), LAUNCH_TIMEOUT);
-    }
+  @Test
+  public void grantLocationPermission() {
 
-    /**
-     * Uses package manager to find the package name of the device launcher. Usually this package
-     * is "com.android.launcher" but can be different at times. This is a generic solution which
-     * works on all platforms.`
-     */
-    private String getLauncherPackageName() {
-        // Create launcher Intent
-        final Intent intent = new Intent(Intent.ACTION_MAIN);
-        intent.addCategory(Intent.CATEGORY_HOME);
+    App.setPermissionsModule(new DefaultPermissionsModule());
 
-        // Use PackageManager to get the launcher package name
-        PackageManager pm = InstrumentationRegistry.getContext().getPackageManager();
-        ResolveInfo resolveInfo = pm.resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY);
-        return resolveInfo.activityInfo.packageName;
-    }
+    device.findObject(By.res(APP_PACKAGE_NAME, "btnRequestLocationPermission")).click();
 
-    @Test
-    public void grantLocationPermission() {
+    UiObject2 btnAllow =
+        device.wait(
+            Until.findObject(By.res(INSTALLER_PACKAGE_NAME, "permission_allow_button")), 500);
 
-        App.setPermissionsModule(new DefaultPermissionsModule());
+    MatcherAssert.assertThat(btnAllow.isEnabled(), Is.is(true));
 
-        device.findObject(By.res(APP_PACKAGE_NAME, "btnRequestLocationPermission")).click();
+    btnAllow.click();
 
-        UiObject2 btnAllow = device.wait(Until.findObject(By.res(INSTALLER_PACKAGE_NAME, "permission_allow_button")),
-                                         500);
+    UiObject2 tvLocationPermissionGranted =
+        device.wait(
+            Until.findObject(By.res(APP_PACKAGE_NAME, "tvLocationPermissionGranted")), 10000);
 
-        MatcherAssert.assertThat(btnAllow.isEnabled(), Is.is(true));
-
-        btnAllow.click();
-
-        UiObject2 tvLocationPermissionGranted = device.wait(Until.findObject(By.res(APP_PACKAGE_NAME,
-                                                                      "tvLocationPermissionGranted")), 10000);
-
-        MatcherAssert.assertThat(tvLocationPermissionGranted, IsNull.notNullValue());
-
-    }
+    MatcherAssert.assertThat(tvLocationPermissionGranted, IsNull.notNullValue());
+  }
 }

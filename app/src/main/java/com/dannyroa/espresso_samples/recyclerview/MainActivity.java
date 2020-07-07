@@ -1,63 +1,65 @@
 package com.dannyroa.espresso_samples.recyclerview;
 
-
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import android.view.Menu;
-import android.view.MenuItem;
 import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    RecyclerView rvTeams;
+  RecyclerView rvTeams;
 
-    @Override protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+  @Override
+  protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    setContentView(R.layout.activity_main);
 
-        rvTeams = (RecyclerView) findViewById(R.id.recycler_view);
+    rvTeams = (RecyclerView) findViewById(R.id.recycler_view);
 
-        List<Team> teams = new ArrayList<>();
-        teams.add(new Team("USA"));
-        teams.add(new Team("Belgium"));
-        teams.add(new Team("Germany"));
-        teams.add(new Team("Philippines"));
-        teams.add(new Team("Australia"));
-        teams.add(new Team("Costa Rica"));
-        teams.add(new Team("Mexico"));
-        teams.add(new Team("Korea"));
-        teams.add(new Team("Brazil"));
-        teams.add(new Team("Chile"));
-        teams.add(new Team("Uruguay"));
-        teams.add(new Team("Colombia"));
+    List<Team> teams = new ArrayList<>();
+    teams.add(new Team("USA"));
+    teams.add(new Team("Belgium"));
+    teams.add(new Team("Germany"));
+    teams.add(new Team("Philippines"));
+    teams.add(new Team("Australia"));
+    teams.add(new Team("Costa Rica"));
+    teams.add(new Team("Mexico"));
+    teams.add(new Team("Korea"));
+    teams.add(new Team("Brazil"));
+    teams.add(new Team("Chile"));
+    teams.add(new Team("Uruguay"));
+    teams.add(new Team("Colombia"));
 
-        TeamAdapter adapter = new TeamAdapter(MainActivity.this, teams);
+    TeamAdapter adapter = new TeamAdapter(MainActivity.this, teams);
 
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
-        rvTeams.setLayoutManager(layoutManager);
-        rvTeams.setAdapter(adapter);
+    RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
+    rvTeams.setLayoutManager(layoutManager);
+    rvTeams.setAdapter(adapter);
+  }
+
+  @Override
+  public boolean onCreateOptionsMenu(Menu menu) {
+    // Inflate the menu; this adds items to the action bar if it is present.
+    getMenuInflater().inflate(R.menu.menu_main, menu);
+    return true;
+  }
+
+  @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
+    // Handle action bar item clicks here. The action bar will
+    // automatically handle clicks on the Home/Up button, so long
+    // as you specify a parent activity in AndroidManifest.xml.
+    int id = item.getItemId();
+
+    //noinspection SimplifiableIfStatement
+    if (id == R.id.action_settings) {
+      return true;
     }
 
-    @Override public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
+    return super.onOptionsItemSelected(item);
+  }
 }

@@ -7,31 +7,30 @@ import android.app.Application;
  */
 public class App extends Application {
 
-    private static PermissionsModule permissionsModule;
-    private static App instance;
+  private static PermissionsModule permissionsModule;
+  private static App instance;
 
+  public static App getInstance() {
+    return instance;
+  }
 
-    @Override
-    public void onCreate() {
-        super.onCreate();
+  static void setInstance(App app) {
+    instance = app;
+  }
 
-        setInstance(this);
-        setPermissionsModule(new DefaultPermissionsModule());
-    }
+  public static PermissionsModule getPermissionsModule() {
+    return permissionsModule;
+  }
 
-    static void setInstance(App app) {
-        instance = app;
-    }
+  public static void setPermissionsModule(PermissionsModule permissionsModule) {
+    App.permissionsModule = permissionsModule;
+  }
 
-    public static App getInstance() {
-        return instance;
-    }
+  @Override
+  public void onCreate() {
+    super.onCreate();
 
-    public static PermissionsModule getPermissionsModule() {
-        return permissionsModule;
-    }
-
-    public static void setPermissionsModule(PermissionsModule permissionsModule) {
-        App.permissionsModule = permissionsModule;
-    }
+    setInstance(this);
+    setPermissionsModule(new DefaultPermissionsModule());
+  }
 }
