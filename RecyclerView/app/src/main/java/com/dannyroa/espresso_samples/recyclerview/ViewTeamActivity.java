@@ -3,13 +3,13 @@ package com.dannyroa.espresso_samples.recyclerview;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.widget.TextView;
 
 /**
  * Created by dannyroa on 5/8/15.
  */
-public class ViewTeamActivity extends ActionBarActivity {
+public class ViewTeamActivity extends AppCompatActivity {
 
     private static final String EXTRA_TEAM_NAME = "extra_team_name";
 
