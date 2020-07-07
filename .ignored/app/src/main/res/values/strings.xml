@@ -1,8 +1,0 @@
-<resources>
-  <string name="app_name">RuntimePermissions</string>
-
-  <string name="hello_world">Hello world!</string>
-  <string name="action_settings">Settings</string>
-  <string name="request_location_permission">Request Location Permission</string>
-  <string name="location_permission_granted">Location Permission Granted</string>
-</resources>
