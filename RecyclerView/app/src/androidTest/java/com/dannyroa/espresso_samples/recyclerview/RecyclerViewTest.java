@@ -1,6 +1,7 @@
 package com.dannyroa.espresso_samples.recyclerview;
 
 import android.support.test.InstrumentationRegistry;
+import android.support.test.espresso.contrib.RecyclerViewActions;
 import android.test.ActivityInstrumentationTestCase2;
 
 import static android.support.test.espresso.Espresso.onView;
@@ -31,7 +32,15 @@ public class RecyclerViewTest extends ActivityInstrumentationTestCase2<MainActiv
         onView(withRecyclerView(R.id.recycler_view).atPosition(1)).perform(click());
 
         onView(withId(R.id.team_name)).check(matches(isDisplayed()));
+    }
 
+    public void testFarItemClick() {
+        // Scroll is mandatory to avoid atPosition(20) fails
+        onView(withId(R.id.recycler_view)).perform(RecyclerViewActions.scrollToPosition(20));
+
+        onView(withRecyclerView(R.id.recycler_view).atPosition(20)).perform(click());
+
+        onView(withId(R.id.team_name)).check(matches(isDisplayed()));
     }
 
     public void testFollowButtonClick() {
@@ -46,4 +55,13 @@ public class RecyclerViewTest extends ActivityInstrumentationTestCase2<MainActiv
 
     }
 
+    public void testFarFollowButtonClick() {
+        final int position = 20;
+        onView(withId(R.id.recycler_view))
+                .perform(TestUtils.actionOnItemViewAtPosition(position, R.id.follow_button, click()));
+
+        String followingText = InstrumentationRegistry.getTargetContext().getString(R.string.following);
+        onView(withRecyclerView(R.id.recycler_view).atPositionOnView(position, R.id.follow_button))
+                .check(matches(withText(followingText)));
+    }
 }
