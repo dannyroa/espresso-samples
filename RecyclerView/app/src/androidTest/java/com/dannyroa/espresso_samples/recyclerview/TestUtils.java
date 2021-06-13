@@ -58,7 +58,8 @@ public class TestUtils {
             (new ScrollToPositionViewAction(this.position)).perform(uiController, view);
             uiController.loopMainThreadUntilIdle();
 
-            View targetView = recyclerView.getChildAt(this.position).findViewById(this.viewId);
+            RecyclerView.ViewHolder viewHolder = recyclerView.findViewHolderForAdapterPosition(this.position);
+            View targetView = viewHolder.itemView.findViewById(this.viewId);
 
             if (targetView == null) {
                 throw (new PerformException.Builder()).withActionDescription(this.toString())

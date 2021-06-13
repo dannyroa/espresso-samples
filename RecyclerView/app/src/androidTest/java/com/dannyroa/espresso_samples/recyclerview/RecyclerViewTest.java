@@ -55,4 +55,13 @@ public class RecyclerViewTest extends ActivityInstrumentationTestCase2<MainActiv
 
     }
 
+    public void testFarFollowButtonClick() {
+        final int position = 20;
+        onView(withId(R.id.recycler_view))
+                .perform(TestUtils.actionOnItemViewAtPosition(position, R.id.follow_button, click()));
+
+        String followingText = InstrumentationRegistry.getTargetContext().getString(R.string.following);
+        onView(withRecyclerView(R.id.recycler_view).atPositionOnView(position, R.id.follow_button))
+                .check(matches(withText(followingText)));
+    }
 }
