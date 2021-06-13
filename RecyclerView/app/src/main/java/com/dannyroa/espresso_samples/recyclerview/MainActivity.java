@@ -33,6 +33,15 @@ public class MainActivity extends ActionBarActivity {
         teams.add(new Team("Chile"));
         teams.add(new Team("Uruguay"));
         teams.add(new Team("Colombia"));
+        teams.add(new Team("France"));
+        teams.add(new Team("Austria"));
+        teams.add(new Team("Luxembourg"));
+        teams.add(new Team("Portugal"));
+        teams.add(new Team("Vatican"));
+        teams.add(new Team("Latvia"));
+        teams.add(new Team("Lithuania"));
+        teams.add(new Team("Italy"));
+        teams.add(new Team("Ireland"));
 
         TeamAdapter adapter = new TeamAdapter(MainActivity.this, teams);
 

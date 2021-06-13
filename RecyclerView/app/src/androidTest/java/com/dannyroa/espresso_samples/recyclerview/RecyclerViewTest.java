@@ -1,6 +1,7 @@
 package com.dannyroa.espresso_samples.recyclerview;
 
 import android.support.test.InstrumentationRegistry;
+import android.support.test.espresso.contrib.RecyclerViewActions;
 import android.test.ActivityInstrumentationTestCase2;
 
 import static android.support.test.espresso.Espresso.onView;
@@ -31,7 +32,15 @@ public class RecyclerViewTest extends ActivityInstrumentationTestCase2<MainActiv
         onView(withRecyclerView(R.id.recycler_view).atPosition(1)).perform(click());
 
         onView(withId(R.id.team_name)).check(matches(isDisplayed()));
+    }
 
+    public void testFarItemClick() {
+        // Scroll is mandatory to avoid atPosition(20) fails
+        onView(withId(R.id.recycler_view)).perform(RecyclerViewActions.scrollToPosition(20));
+
+        onView(withRecyclerView(R.id.recycler_view).atPosition(20)).perform(click());
+
+        onView(withId(R.id.team_name)).check(matches(isDisplayed()));
     }
 
     public void testFollowButtonClick() {
